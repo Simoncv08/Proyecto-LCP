@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Registro{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+
+        <div class="card shadow-sm p-4">
+
+            <h3 class="mb-3 text-center">Crear Registro</h3>
+
+            {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="/tasks/create/" method="POST">
+                {% csrf_token %}
+
+                <!-- Evento -->
+                <div class="mb-3">
+                    {{ form.evento.label_tag }}
+                    {{ form.evento }}
+                </div>
+
+                <!-- Productos dinámicos -->
+                <div id="productos" class="mt-3"></div>
+
+                <!-- Mensaje precio base -->
+                <p id="precio-base" class="text-muted mt-2" style="display:none;">
+                    Este evento usa un precio fijo
+                </p>
+
+                <!-- Total -->
+                <div class="mb-3">
+                    <label class="form-label">Total</label>
+                    <input type="text" id="total" class="form-control" readonly value="$ 0">
+                </div>
+
+                <!-- NUEVO: Filtros para reducir la lista de estudiantes -->
+                <div class="row mb-2">
+                    <div class="col">
+                        <label class="form-label text-muted" style="font-size: 0.85rem;">
+                            Filtrar por grado
+                        </label>
+                        <select id="filtro-grado" class="form-select form-select-sm">
+                            <option value="">-- Todos --</option>
+                            {% for g in range_grados %}
+                                <option value="{{ g }}">{{ g }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label text-muted" style="font-size: 0.85rem;">
+                            Filtrar por sección
+                        </label>
+                        <select id="filtro-seccion" class="form-select form-select-sm">
+                            <option value="">-- Todas --</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Estudiante  -->
+                <div class="mb-3">
+                    {{ form.estudiante.label_tag }}
+                    {{ form.estudiante }}
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Guardar Registro
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

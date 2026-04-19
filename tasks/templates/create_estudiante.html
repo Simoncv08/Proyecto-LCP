@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Estudiante{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+
+        <div class="card shadow-sm p-4">
+
+            <h3 class="text-center mb-3">Nuevo Estudiante</h3>
+
+            {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ form.nombre.label_tag }}
+                    {{ form.nombre }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.grado.label_tag }}
+                    {{ form.grado }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.seccion.label_tag }}
+                    {{ form.seccion }}
+                </div>
+
+                <button class="btn btn-success w-100">
+                    Guardar Estudiante
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

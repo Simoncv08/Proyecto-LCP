@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+
+<div class="text-center py-5">
+
+    <h1 class="display-4 fw-bold mb-3">
+        Billetera LCP
+    </h1>
+
+    <p class="lead text-muted mb-4">
+        Gestiona tus eventos y finanzas de forma simple y organizada
+    </p>
+
+    <div class="d-flex justify-content-center gap-3">
+        <a href="/events" class="btn btn-primary btn-lg">
+            Ver Eventos
+        </a>
+
+        <a href="/tasks" class="btn btn-outline-secondary btn-lg">
+            Ver Registros
+        </a>
+    </div>
+
+</div>
+
+<!-- CARDS -->
+<div class="row mt-5">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-4">
+            <i class="fas fa-calendar fa-2x mb-3 text-primary"></i>
+            <h5>Eventos</h5>
+            <p class="text-muted">
+                Crea y gestiona eventos fácilmente
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-4">
+            <i class="fas fa-money-bill-wave fa-2x mb-3 text-success"></i>
+            <h5>Finanzas</h5>
+            <p class="text-muted">
+                Lleva control del dinero recaudado
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-4">
+            <i class="fas fa-users fa-2x mb-3 text-dark"></i>
+            <h5>Usuarios</h5>
+            <p class="text-muted">
+                Administra quién registra la información
+            </p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

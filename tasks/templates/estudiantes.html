@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Estudiantes{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Estudiantes</h2>
+
+    <div class="d-flex gap-2">
+        <a href="/estudiantes/create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Estudiante
+        </a>
+
+        <a href="{% url 'importar_estudiantes' %}" class="btn btn-outline-success">
+            <i class="fas fa-file-excel"></i> Importar Excel
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Grado</th>
+                    <th>Acciones</th>  <!-- NUEVO -->
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for e in estudiantes %}
+                <tr>
+                    <td>{{ e.nombre }}</td>
+                    <td>{{ e.grado }}{{ e.seccion }}</td>
+
+                    <!-- NUEVO -->
+                    <td>
+                        <a href="{% url 'editar_estudiante' e.id %}"
+                           class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <form method="POST"
+                              action="{% url 'eliminar_estudiante' e.id %}"
+                              style="display:inline"
+                              onsubmit="return confirm('¿Eliminar a {{ e.nombre }}?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+        {% if estudiantes|length == 0 %}
+        <p class="text-center text-muted">No hay estudiantes</p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,102 @@
+body {
+    background-color: #f5f5ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== BOTONES ====== */
+.btn {
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+}
+
+.btn-danger {
+    border-radius: 6px;
+}
+
+/* ====== TABLAS ====== */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Hover en filas */
+.table-hover tbody tr:hover {
+    background-color: #f1f3f9;
+}
+
+/* ====== INPUTS / FORMULARIOS ====== */
+.form-control, .form-select {
+    border-radius: 8px;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.2);
+}
+
+/* ====== FILTROS (espaciado) ====== */
+form .btn {
+    min-width: 100px;
+}
+
+/* ====== TEXTO ====== */
+.text-muted {
+    font-size: 0.95rem;
+}
+
+/* ====== HOME (cards de inicio) ====== */
+.fa-2x {
+    opacity: 0.9;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    h1.display-4 {
+        font-size: 2rem;
+    }
+
+    .card {
+        margin-bottom: 15px;
+    }
+}
