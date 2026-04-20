@@ -110,3 +110,31 @@ class EstudianteForm(forms.ModelForm):
             'grado': 'Grado',
             'seccion': 'Sección',
         }
+
+class UsuarioForm(forms.ModelForm):
+    nueva_password = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput,
+        label="Nueva contraseña"
+    )
+
+    confirmar_password = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput,
+        label="Confirmar contraseña"
+    )
+
+    class Meta:
+        model = User
+        fields = ['username']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get("nueva_password")
+        p2 = cleaned_data.get("confirmar_password")
+
+        if p1 or p2:
+            if p1 != p2:
+                raise forms.ValidationError("Las contraseñas no coinciden")
+
+        return cleaned_data

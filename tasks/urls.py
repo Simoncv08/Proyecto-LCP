@@ -22,4 +22,5 @@ urlpatterns = [
     path('estudiantes/<int:estudiante_id>/editar/',   views.editar_estudiante,   name='editar_estudiante'),
     path('aceptar-terminos/', views.aceptar_terminos, name='aceptar_terminos'),
     path('mora/', views.mora_view, name='mora'),
+    path('usuarios/', views.usuarios_view, name='usuarios'),
 ]

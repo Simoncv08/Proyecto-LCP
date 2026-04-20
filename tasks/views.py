@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
-from .forms import TransaccionForm, EventoForm, CustomAuthForm, CustomUserCreationForm, EstudianteForm
+from .forms import TransaccionForm, EventoForm, CustomAuthForm, CustomUserCreationForm, EstudianteForm, UsuarioForm
 from .models import Transaccion, Eventos, Producto, DetalleTransaccion, Estudiante, Profile, DocumentoLegal
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -244,7 +244,8 @@ def eliminar_evento(request, evento_id):
         evento.delete()
         return redirect('events')
 
-
+@login_required
+@user_passes_test(lambda u: u.is_staff)
 def edit_event(request, evento_id):
     evento = get_object_or_404(Eventos, id=evento_id)
     productos = Producto.objects.filter(evento=evento)
@@ -287,7 +288,7 @@ def edit_event(request, evento_id):
                 'form': EventoForm(instance=evento),
                 'productos': productos, 'error': str(e)})
 
-
+@login_required
 def productos_por_evento(request, evento_id):
     productos = Producto.objects.filter(evento_id=evento_id)
     evento = Eventos.objects.get(id=evento_id)
@@ -488,6 +489,8 @@ def base_context(request):
         "privacidad_actual": DocumentoLegal.objects.filter(tipo="privacidad").order_by("-version").first(),
     }
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
 def mora_view(request):
     eventos = Eventos.objects.all()
     grados = range(1, 12)
@@ -523,3 +526,34 @@ def mora_view(request):
         'seccion': seccion,
         'grados': grados,
     })
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def usuarios_view(request):
+    usuarios = User.objects.filter(is_staff=False, is_superuser=False)
+    return render(request, 'usuarios.html', {'usuarios': usuarios})
+
+@login_required
+def editar_usuario(request, user_id):
+    usuario = get_object_or_404(
+        User,
+        id=user_id,
+        is_superuser=False,
+        is_staff=False
+    )
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            nueva_password = form.cleaned_data.get("nueva_password")
+            if nueva_password:
+                user.set_password(nueva_password)
+
+            user.save()
+            return redirect('usuarios')
+    else:
+        form = UsuarioForm(instance=usuario)
+
+    return render(request, 'editar_usuario.html', {'form': form})

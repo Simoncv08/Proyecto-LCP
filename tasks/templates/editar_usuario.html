@@ -1,0 +1,19 @@
+<h4>Editar Usuario</h4>
+
+<form method="post">
+    {% csrf_token %}
+    
+    {{ form.username.label }}<br>
+    {{ form.username }}<br><br>
+
+    <hr>
+    <h6>Cambiar contraseña</h6>
+
+    {{ form.nueva_password.label }}<br>
+    {{ form.nueva_password }}<br>
+
+    {{ form.confirmar_password.label }}<br>
+    {{ form.confirmar_password }}<br><br>
+
+    <button class="btn btn-success">Guardar</button>
+</form>
