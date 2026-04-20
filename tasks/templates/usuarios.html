@@ -18,7 +18,13 @@
             <td>{{ u.email }}</td>
             <td>
                 <a href="{% url 'editar_usuario' u.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <a href="{% url 'eliminar_usuario' u.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                <form method="POST" action="{% url 'eliminar_usuario' u.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">
+                        Eliminar
+                    </button>
+                </form>
             </td>
         </tr>
         {% endfor %}

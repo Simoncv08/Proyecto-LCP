@@ -557,3 +557,19 @@ def editar_usuario(request, user_id):
         form = UsuarioForm(instance=usuario)
 
     return render(request, 'editar_usuario.html', {'form': form})
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def eliminar_usuario(request, user_id):
+    usuario = get_object_or_404(
+        User,
+        id=user_id,
+        is_superuser=False,
+        is_staff=False
+    )
+
+    if request.method == "POST":
+        usuario.delete()
+        return redirect('usuarios')
+
+    return redirect('usuarios')

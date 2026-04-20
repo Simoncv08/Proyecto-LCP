@@ -23,4 +23,5 @@ urlpatterns = [
     path('aceptar-terminos/', views.aceptar_terminos, name='aceptar_terminos'),
     path('mora/', views.mora_view, name='mora'),
     path('usuarios/', views.usuarios_view, name='usuarios'),
+    
 ]
