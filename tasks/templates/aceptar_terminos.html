@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Aceptar términos{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+
+        <div class="card shadow-sm p-4 text-center">
+
+            <h2 style="color:#06377a;">Antes de continuar</h2>
+
+            <p class="text-muted">
+                Debes aceptar los documentos legales para continuar
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- CHECKBOX TÉRMINOS -->
+                <div class="form-check text-start mb-3">
+                    <input class="form-check-input" type="checkbox" name="terminos" id="terminos" required>
+
+                    <label class="form-check-label" for="terminos">
+                        He leído y acepto los
+                        <a href="#"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modalTerminos"
+                           style="color:#00833f; text-decoration: underline;">
+                            Términos y Condiciones
+                        </a>
+                    </label>
+                </div>
+
+                <!-- CHECKBOX PRIVACIDAD -->
+                <div class="form-check text-start mb-4">
+                    <input class="form-check-input" type="checkbox" name="privacidad" id="privacidad" required>
+
+                    <label class="form-check-label" for="privacidad">
+                        He leído y acepto la
+                        <a href="#"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modalPrivacidad"
+                           style="color:#00833f; text-decoration: underline;">
+                            Política de Privacidad
+                        </a>
+                    </label>
+                </div>
+
+                <!-- BOTÓN -->
+                <button type="submit"
+                        class="btn w-100"
+                        style="background-color:#00833f; color:white;">
+                    Continuar
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= MODAL TÉRMINOS ================= -->
+<div class="modal fade" id="modalTerminos" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" style="color:#06377a;">
+                    Términos y Condiciones
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                {{ terminos.contenido|linebreaks }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL PRIVACIDAD ================= -->
+<div class="modal fade" id="modalPrivacidad" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" style="color:#06377a;">
+                    Política de Privacidad
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                {{ privacidad.contenido|linebreaks }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

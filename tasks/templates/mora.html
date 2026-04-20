@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Mora{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h3 class="fw-semibold">Consulta de Mora</h3>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card shadow-sm mb-4" style="border-radius:12px;">
+        <div class="card-body">
+
+            <form method="get" onchange="this.submit()" class="row g-3">
+
+                <!-- EVENTO -->
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Evento</label>
+                    <select name="evento" class="form-select">
+                        <option value="">Seleccionar</option>
+                        {% for e in eventos %}
+                            <option value="{{ e.id }}" {% if evento and e.id == evento.id %}selected{% endif %}>
+                                {{ e.titulo }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- GRADO -->
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Grado</label>
+                    <select name="grado" class="form-select">
+                        <option value="">Todos</option>
+                        {% for g in grados %}
+                            <option value="{{ g }}" {% if grado == g|stringformat:"s" %}selected{% endif %}>
+                                {{ g }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- SECCIÓN -->
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Sección</label>
+                    <select name="seccion" class="form-select">
+                        <option value="">Todas</option>
+                        <option value="A" {% if seccion == "A" %}selected{% endif %}>A</option>
+                        <option value="B" {% if seccion == "B" %}selected{% endif %}>B</option>
+                    </select>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    {% if evento %}
+    <div class="card shadow-sm" style="border-radius:12px;">
+        <div class="card-body">
+
+            <!-- HEADER RESULTADO -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">
+                    Morosos — {{ evento.titulo }}
+                </h5>
+
+                <span class="badge bg-danger">
+                    {{ no_pagaron|length }} estudiantes
+                </span>
+            </div>
+
+            <!-- TABLA -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle modern-table">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Grado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for estudiante in no_pagaron %}
+                        <tr>
+                            <td class="fw-semibold">{{ estudiante.nombre }}</td>
+                            <td>
+                                <span class="badge bg-secondary">
+                                    {{ estudiante.grado }}{{ estudiante.seccion }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center text-success py-4">
+                                Todos han pagado.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -14,12 +14,43 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
+    <div class="barra-superior">
+        <div class="container d-flex justify-content-between align-items-center">
+
+            <!-- Izquierda: datos de contacto -->
+            <div class="d-flex gap-3">
+                <span>
+                    <i class="fas fa-envelope me-1"></i> soporte.colectia@gmail.com
+                </span>
+                <span>
+                    <i class="fas fa-phone me-1"></i> Proximamente
+                </span>
+            </div>
+
+            <!-- Derecha: lo que quieras, ej: usuario activo -->
+            <div>
+                {% if user.is_authenticated %}
+                <span style="cursor: pointer; color: #aaaaaa;" data-bs-toggle="modal" data-bs-target="#modalUsuario">
+                    <i class="fas fa-user me-1"></i> {{ user.username }}
+                </span>
+                {% else %}
+                <i class="fas fa-lock me-1"></i> No has iniciado sesión
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
-        <a class="navbar-brand" href="/">Billetera LCP</a>
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'img/logo-lcp.webp' %}" alt="Logo LCP" height="54">
+            Billetera LCP
+        </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -36,12 +67,14 @@
                 <li class="nav-item"><a href="/admin" class="nav-link">Admin</a></li>
                 <li class="nav-item"><a href="/signup" class="nav-link">Crear Cuenta</a></li>
                 <li class="nav-item"><a href="/tasks" class="nav-link">Registros</a></li>
+                <li class="nav-item"><a href="/mora" class="nav-link">Mora</a></li>
                 <li class="nav-item"><a href="/events" class="nav-link">Eventos</a></li>
                 <li class="nav-item"><a href="/estudiantes" class="nav-link">Estudiantes</a></li>
                 <li class="nav-item"><a href="/logout" class="nav-link">Cerrar Sesión</a></li>
 
                 {% elif user.is_authenticated %}
                 <li class="nav-item"><a href="/tasks" class="nav-link">Registros</a></li>
+                <li class="nav-item"><a href="/mora" class="nav-link">Mora</a></li>
                 <li class="nav-item"><a href="/logout" class="nav-link">Cerrar Sesión</a></li>
 
                 {% else %}
@@ -59,6 +92,124 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    <!-- Barra inferior -->
+    <footer class="mt-5" style="background-color: #1a1a2e; color: #aaaaaa; font-size: 0.85rem;">
+
+        <div class="container py-4">
+            <div class="row">
+
+                <!-- Columna 1: info del colegio -->
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <img src="{% static 'img/COLECTIA.png' %}" alt="Logo LCP" height="28">
+                        <span style="color: #ffffff; font-weight: 600;">Colectia</span>
+                    </div>
+                    <p class="mb-0">Sistema de gestión de recaudos.</p>
+                </div>
+
+                <!-- Columna 2: contacto -->
+                <div class="col-md-4 mb-3">
+                    <h6 style="color: #ffffff;">Contacto</h6>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i> soporte.colectia@gmail.com</p>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i> Proximamente</p>
+                    <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i> Pereira, Colombia</p>
+                </div>
+
+                <!-- Columna 3: links rápidos -->
+                <div class="col-md-4 mb-3">
+                    <h6 style="color: #ffffff;">Enlaces</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="/" style="color: #aaaaaa; text-decoration: none;">Inicio</a></li>
+                        {% if user.is_authenticated %}
+                        <li><a href="/tasks" style="color: #aaaaaa; text-decoration: none;">Registros</a></li>
+                        <li><a href="/mora" style="color: #aaaaaa; text-decoration: none;">Mora</a></li>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                        <li><a href="/events" style="color: #aaaaaa; text-decoration: none;">Eventos</a></li>
+                        <li><a href="/estudiantes" style="color: #aaaaaa; text-decoration: none;">Estudiantes</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Franja de copyright -->
+        <div style="background-color: #0f0f1a; text-align: center; padding: 10px;">
+            <small>© 2025 Colectia — Todos los derechos reservados</small>
+        </div>
+
+    </footer>
+
+    <div class="modal fade" id="modalUsuario" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow" style="border-radius:16px; border:none;">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <h6 class="mb-0" style="color:#06377a; font-weight:600;">
+                        <i class="fas fa-user me-2"></i>{{ user.username }}
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- SWITCH -->
+                <div class="px-3 pt-3 text-center">
+
+                    <div class="doc-switch">
+                        <button class="doc-btn active" onclick="mostrarDoc(event, 'terminos')">
+                            Términos
+                        </button>
+
+                        <button class="doc-btn" onclick="mostrarDoc(event, 'privacidad')">
+                            Privacidad
+                        </button>
+                    </div>
+
+                    <!-- INFO DINÁMICA -->
+                    <div class="mt-2 text-muted" style="font-size:0.75rem; opacity:0.8;">
+                        <span id="infoDoc" data-version-terminos="v{{ terminos_actual.version }}"
+                            data-fecha-terminos="{{ terminos_actual.fecha|date:'d/m/Y' }}"
+                            data-version-privacidad="v{{ privacidad_actual.version }}"
+                            data-fecha-privacidad="{{ privacidad_actual.fecha|date:'d/m/Y' }}">
+
+                            v{{ terminos_actual.version }} · {{ terminos_actual.fecha|date:"d/m/Y" }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- CONTENIDO -->
+                <div class="modal-body" style="max-height:60vh; overflow-y:auto;">
+
+                    <!-- ⚠️ IMPORTANTE: IDs CORREGIDOS -->
+                    <div id="doc-terminos" class="doc-content">
+                        {{ terminos_actual.contenido|linebreaks }}
+                    </div>
+
+                    <div id="doc-privacidad" class="doc-content" style="display:none;">
+                        {{ privacidad_actual.contenido|linebreaks }}
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <small class="text-muted me-auto">
+                        Última actualización visible
+                    </small>
+
+                    <button class="btn btn-sm" style="background:#00833f; color:white;" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <script src="{% static 'js/main.js' %}"></script>
 

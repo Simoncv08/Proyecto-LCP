@@ -7,50 +7,64 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!eventoSelect || !contenedor) return;
 
     function calcularTotal() {
-        let total = 0;
-        document.querySelectorAll("[data-precio]").forEach(input => {
-            const precio = parseInt(input.dataset.precio);
-            const cantidad = parseInt(input.value) || 0;
-            total += precio * cantidad;
-        });
-        if (totalInput) {
-            totalInput.value = "$ " + total.toLocaleString("es-CO");
-        }
+    let total = 0;
+
+    document.querySelectorAll("[data-precio]").forEach(input => {
+        const precio = parseInt(input.dataset.precio);
+        const cantidad = parseInt(input.value) || 0;
+        total += precio * cantidad;
+    });
+
+    const precioBase = parseInt(contenedor.dataset.precioBase) || 0;
+    total += precioBase;
+
+    if (totalInput) {
+        totalInput.value = "$ " + total.toLocaleString("es-CO");
     }
+}
 
     eventoSelect.addEventListener("change", function () {
         const eventoId = this.value;
         fetch(`/productos/${eventoId}/`)
-            .then(res => res.json())
-            .then(data => {
-                let html = "";
-                if (data.productos.length === 0) {
-                    contenedor.innerHTML = "";
-                    precioBaseMsg.style.display = "block";
-                    totalInput.value = "$ " + data.precio_base.toLocaleString("es-CO");
-                } else {
-                    precioBaseMsg.style.display = "none";
-                    data.productos.forEach(p => {
-                        html += `
-                            <div class="mb-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>${p.nombre} ($${p.precio.toLocaleString("es-CO")})</span>
-                                    <input 
-                                        type="number" min="0" value="0"
-                                        data-precio="${p.precio}"
-                                        name="producto_${p.id}"
-                                        class="form-control w-25 cantidad"
-                                    >
-                                </div>
-                            </div>`;
-                    });
-                    contenedor.innerHTML = html;
-                    document.querySelectorAll(".cantidad").forEach(input => {
-                        input.addEventListener("input", calcularTotal);
-                    });
-                    calcularTotal();
-                }
+    .then(res => res.json())
+    .then(data => {
+        let html = "";
+
+        if (data.productos.length === 0) {
+            contenedor.innerHTML = "";
+            precioBaseMsg.style.display = "block";
+            // sin productos, el total es solo el precio base
+            totalInput.value = "$ " + data.precio_base.toLocaleString("es-CO");
+        } else {
+            precioBaseMsg.style.display = "none";
+
+            data.productos.forEach(p => {
+                html += `
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${p.nombre} ($${p.precio.toLocaleString("es-CO")})</span>
+                            <input 
+                                type="number" min="0" value="0"
+                                data-precio="${p.precio}"
+                                name="producto_${p.id}"
+                                class="form-control w-25 cantidad"
+                            >
+                        </div>
+                    </div>`;
             });
+
+            contenedor.innerHTML = html;
+
+            // CORREGIDO: guardar precio_base para sumarlo siempre
+            contenedor.dataset.precioBase = data.precio_base;
+
+            document.querySelectorAll(".cantidad").forEach(input => {
+                input.addEventListener("input", calcularTotal);
+            });
+
+            calcularTotal();
+        }
+    });
     });
 });
 
@@ -183,3 +197,37 @@ document.addEventListener("DOMContentLoaded", function () {
     filtroGrado.addEventListener("change", cargarEstudiantes);
     filtroSeccion.addEventListener("change", cargarEstudiantes);
 });
+
+function mostrarDoc(event, tipo) {
+
+    const terminos = document.getElementById("doc-terminos");
+    const privacidad = document.getElementById("doc-privacidad");
+
+    // Si no existen, no ejecutar
+    if (!terminos || !privacidad) return;
+
+    // Ocultar ambos
+    terminos.style.display = "none";
+    privacidad.style.display = "none";
+
+    // Mostrar el seleccionado
+    const seleccionado = document.getElementById("doc-" + tipo);
+    if (seleccionado) {
+        seleccionado.style.display = "block";
+    }
+
+    // Cambiar botón activo
+    document.querySelectorAll(".doc-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    event.currentTarget.classList.add("active");
+
+    // Cambiar versión (opcional)
+    const version = document.getElementById("versionDoc");
+    if (version) {
+        version.innerText = tipo === "terminos"
+            ? "v{{ terminos_actual.version }}"
+            : "v{{ privacidad_actual.version }}";
+    }
+}

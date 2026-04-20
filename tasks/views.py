@@ -4,11 +4,12 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from .forms import TransaccionForm, EventoForm, CustomAuthForm, CustomUserCreationForm, EstudianteForm
-from .models import Transaccion, Eventos, Producto, DetalleTransaccion, Estudiante
+from .models import Transaccion, Eventos, Producto, DetalleTransaccion, Estudiante, Profile, DocumentoLegal
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from datetime import datetime
+from django.utils import timezone
 
 import openpyxl
 
@@ -20,23 +21,30 @@ def home(request):
 def signup(request):
     if request.method == 'GET':
         return render(request, 'signup.html', {'form': CustomUserCreationForm})
-    else:
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(
-                    username=request.POST['username'], password=request.POST['password1'])
-                user.save()
-                login(request, user)
-                return redirect('/tasks')
-            except IntegrityError:
-                return render(request, 'signup.html', {
-                    'form': CustomUserCreationForm,
-                    'error': 'Usuario ya existente.'
-                })
-        return render(request, 'signup.html', {
-            'form': CustomUserCreationForm,
-            'error': 'Contraseñas no coinciden.'
-        })
+
+    if request.POST['password1'] == request.POST['password2']:
+        try:
+            user = User.objects.create_user(
+                username=request.POST['username'],
+                password=request.POST['password1']
+            )
+            user.save()
+
+            # ❌ QUITAMOS ESTO
+            # login(request, user)
+
+            return redirect('tasks')  # o '/tasks'
+
+        except IntegrityError:
+            return render(request, 'signup.html', {
+                'form': CustomUserCreationForm,
+                'error': 'Usuario ya existente.'
+            })
+
+    return render(request, 'signup.html', {
+        'form': CustomUserCreationForm,
+        'error': 'Contraseñas no coinciden.'
+    })
 
 
 @login_required
@@ -115,7 +123,7 @@ def create_task(request):
                                 producto = Producto.objects.get(id=producto_id)
                                 total += producto.precio * cantidad
 
-                nuevaTransaccion.monto = total if hay_productos else evento.precio_base
+                nuevaTransaccion.monto = evento.precio_base + total
                 nuevaTransaccion.save()
 
                 if hay_productos:
@@ -181,22 +189,51 @@ def signout(request):
     logout(request)
     return redirect('home')
 
-
 def signin(request):
     if request.method == 'GET':
         return render(request, 'signin.html', {'form': CustomAuthForm})
-    else:
-        user = authenticate(
-            request, username=request.POST['username'],
-            password=request.POST['password'])
-        if user is None:
-            return render(request, 'signin.html', {
-                'form': CustomAuthForm,
-                'error': 'Usuario y/o Contraseña incorrectas'
-            })
-        else:
-            login(request, user)
-            return redirect('tasks')
+
+    user = authenticate(
+        request,
+        username=request.POST['username'],
+        password=request.POST['password']
+    )
+
+    if user is None:
+        return render(request, 'signin.html', {
+            'form': CustomAuthForm,
+            'error': 'Usuario y/o Contraseña incorrectas'
+        })
+
+    profile, _ = Profile.objects.get_or_create(user=user)
+
+    terminos = DocumentoLegal.objects.filter(tipo='terminos').order_by('-fecha').first()
+    privacidad = DocumentoLegal.objects.filter(tipo='privacidad').order_by('-fecha').first()
+
+    if (
+        (terminos and profile.version_terminos != terminos.version) or
+        (privacidad and profile.version_privacidad != privacidad.version)
+    ):
+        login(request, user)  # importante: iniciar sesión antes de redirigir
+        return redirect('aceptar_terminos')
+
+    login(request, user)
+    return redirect('tasks')
+
+    # LOGIN
+    login(request, user)
+
+    # Obtener profile
+    profile, _ = Profile.objects.get_or_create(user=user)
+
+    # Obtener términos actuales
+    terminos_actual = DocumentoLegal.objects.order_by('-fecha').first()
+
+    # SI NO HA ACEPTADO ESTA VERSIÓN
+    if terminos_actual and profile.version_terminos != terminos_actual.version:
+        return redirect('aceptar_terminos')
+
+    return redirect('tasks')
 
 
 @login_required
@@ -394,3 +431,95 @@ def editar_estudiante(request, estudiante_id):
             'estudiante': estudiante,
             'error': 'Datos inválidos'
         })
+    
+def aceptar_terminos(request):
+    if not request.user.is_authenticated:
+        return redirect('signin')
+
+    profile = request.user.profile
+
+    if profile.acepta_terminos and profile.acepta_privacidad:
+        return redirect('tasks')
+
+    if request.method == "POST":
+        if request.POST.get("terminos") and request.POST.get("privacidad"):
+            profile.acepta_terminos = True
+            profile.acepta_privacidad = True
+            profile.save()
+            return redirect('tasks')
+
+        return render(request, 'aceptar_terminos.html', {
+            'error': 'Debes aceptar ambos para continuar'
+        })
+
+    return render(request, 'aceptar_terminos.html')
+
+def aceptar_terminos(request):
+    if not request.user.is_authenticated:
+        return redirect('signin')
+
+    profile = request.user.profile
+
+    terminos = DocumentoLegal.objects.filter(tipo='terminos').order_by('-fecha').first()
+    privacidad = DocumentoLegal.objects.filter(tipo='privacidad').order_by('-fecha').first()
+
+    if request.method == 'POST':
+        if request.POST.get("terminos") and request.POST.get("privacidad"):
+
+            if terminos:
+                profile.version_terminos = terminos.version
+
+            if privacidad:
+                profile.version_privacidad = privacidad.version
+
+            profile.fecha_aceptacion = timezone.now()
+            profile.save()
+
+            return redirect('tasks')
+
+    return render(request, 'aceptar_terminos.html', {
+        'terminos': terminos,
+        'privacidad': privacidad
+    })
+
+def base_context(request):
+    return {
+        "terminos_actual": DocumentoLegal.objects.filter(tipo="terminos").order_by("-version").first(),
+        "privacidad_actual": DocumentoLegal.objects.filter(tipo="privacidad").order_by("-version").first(),
+    }
+
+def mora_view(request):
+    eventos = Eventos.objects.all()
+    grados = range(1, 12)
+
+    evento_id = request.GET.get('evento')
+    grado = request.GET.get('grado')
+    seccion = request.GET.get('seccion')
+
+    no_pagaron = None
+    evento = None
+
+    if evento_id:
+        evento = get_object_or_404(Eventos, id=evento_id)
+
+        pagaron_ids = Transaccion.objects.filter(
+            evento=evento
+        ).values_list('estudiante_id', flat=True)
+
+        no_pagaron = Estudiante.objects.exclude(id__in=pagaron_ids)
+
+        # 🔽 FILTROS
+        if grado:
+            no_pagaron = no_pagaron.filter(grado=grado)
+
+        if seccion:
+            no_pagaron = no_pagaron.filter(seccion=seccion)
+
+    return render(request, 'mora.html', {
+        'eventos': eventos,
+        'no_pagaron': no_pagaron,
+        'evento': evento,
+        'grado': grado,
+        'seccion': seccion,
+        'grados': grados,
+    })

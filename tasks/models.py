@@ -9,6 +9,19 @@ def current_year():
 
 # Create your models here.
 
+# models.py
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    version_terminos = models.CharField(max_length=10, default="")
+    version_privacidad = models.CharField(max_length=10, default="")
+
+    fecha_aceptacion = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
 
 class Eventos(models.Model):
     titulo = models.CharField(max_length=50)
@@ -76,3 +89,17 @@ class DetalleTransaccion(models.Model):
 
     def subtotal(self):
         return self.producto.precio * self.cantidad
+
+class DocumentoLegal(models.Model):
+    TIPO_CHOICES = [
+        ('terminos', 'Términos y Condiciones'),
+        ('privacidad', 'Política de Privacidad'),
+    ]
+
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    version = models.CharField(max_length=10)
+    contenido = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} v{self.version}"

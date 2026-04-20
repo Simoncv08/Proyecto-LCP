@@ -1,23 +1,69 @@
+/* ====== BASE ====== */
 body {
     background-color: #f5f5ff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
+/* ====== BARRAS ====== */
+.barra-superior,
+footer {
+    background-color: #ffde00;
+    color: #666c6e;
+    font-size: 0.82rem;
+    padding: 6px 16px;
+}
 
+/* ====== NAVBAR ====== */
 .navbar {
+    background-color: #ffffff !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .navbar-brand {
+    color: #06377a !important;
+    font-weight: 600;
+    font-family: "Roboto Slab", serif;
+}
+
+.navbar .nav-link {
+    color: #00833f !important;
+}
+
+.navbar .nav-link:hover {
+    color: #06377a !important;
+}
+
+/* ====== TITULOS ====== */
+h1, h2, h3, h4, h5 {
+    font-family: "Roboto Slab", serif;
+    color: #06377a;
     font-weight: 600;
 }
 
-
-h1, h2, h3 {
-    font-weight: 600;
+.display-4 {
+    color: #06377a;
 }
 
+/* ====== BOTONES ====== */
+.btn {
+    border-radius: 8px;
+}
 
+.btn-primary {
+    background-color: #00833f;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #006b34;
+}
+
+.btn-lg {
+    padding: 12px 28px;
+    font-size: 1.1rem;
+}
+
+/* ====== CARDS ====== */
 .card {
     border: none;
     border-radius: 12px;
@@ -29,22 +75,13 @@ h1, h2, h3 {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* ====== BOTONES ====== */
-.btn {
-    border-radius: 8px;
+/* ====== ICONOS (para que coincidan con tu paleta) ====== */
+.text-primary {
+    color: #06377a !important;
 }
 
-.btn-primary {
-    background-color: #4e73df;
-    border: none;
-}
-
-.btn-primary:hover {
-    background-color: #2e59d9;
-}
-
-.btn-danger {
-    border-radius: 6px;
+.text-success {
+    color: #00833f !important;
 }
 
 /* ====== TABLAS ====== */
@@ -57,37 +94,22 @@ h1, h2, h3 {
     font-weight: 600;
 }
 
-.table td, .table th {
-    vertical-align: middle;
-}
-
-/* Hover en filas */
 .table-hover tbody tr:hover {
     background-color: #f1f3f9;
 }
 
-/* ====== INPUTS / FORMULARIOS ====== */
+/* ====== FORMULARIOS ====== */
 .form-control, .form-select {
     border-radius: 8px;
 }
 
 .form-control:focus, .form-select:focus {
-    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.2);
-}
-
-/* ====== FILTROS (espaciado) ====== */
-form .btn {
-    min-width: 100px;
+    box-shadow: 0 0 0 0.2rem rgba(0, 131, 63, 0.2);
 }
 
 /* ====== TEXTO ====== */
 .text-muted {
     font-size: 0.95rem;
-}
-
-/* ====== HOME (cards de inicio) ====== */
-.fa-2x {
-    opacity: 0.9;
 }
 
 /* ====== RESPONSIVE ====== */
@@ -99,4 +121,113 @@ form .btn {
     .card {
         margin-bottom: 15px;
     }
+}
+
+/* ====== TABLA MODERNA ====== */
+
+.modern-table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* HEADER */
+.modern-table thead {
+    background-color: #f8f9fc;
+}
+
+.modern-table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    border-bottom: none;
+    padding: 14px;
+}
+
+/* FILAS */
+.modern-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.modern-table tbody td {
+    padding: 14px;
+    border-top: 1px solid #f1f3f9;
+}
+
+/* HOVER SUAVE */
+.modern-table.table-hover tbody tr:hover {
+    background-color: #f1f3f9;
+}
+
+/* MONTO */
+.modern-table td.text-success {
+    font-weight: 600;
+    color: #00833f !important;
+}
+
+/* GRADO como badge suave */
+.modern-table td:nth-child(3) {
+    font-weight: 500;
+    color: #06377a;
+}
+
+/* FECHA más sutil */
+.modern-table td:nth-child(5) {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.modal-content {
+    border-radius: 16px;
+}
+
+.modal-header {
+    background-color: #ffde00;
+}
+
+.modal-title {
+    color: #06377a;
+    font-family: 'Roboto Slab', serif;
+}
+
+/* CONTENEDOR SWITCH */
+.doc-switch {
+    display: inline-flex;
+    background: #f1f3f5;
+    border-radius: 999px;
+    padding: 4px;
+}
+
+/* BOTONES */
+.doc-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: #555;
+    transition: all 0.2s ease;
+}
+
+/* HOVER */
+.doc-btn:hover {
+    background: rgba(0, 131, 63, 0.1);
+    color: #00833f;
+}
+
+/* ACTIVO (IMPORTANTE) */
+.doc-btn.active {
+    background: #00833f;
+    color: white;
+    font-weight: 500;
+}
+
+/* TEXTO DOCUMENTO */
+.doc-content {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.doc-content p {
+    margin-bottom: 10px;
 }

@@ -20,4 +20,6 @@ urlpatterns = [
     path('estudiantes/importar/', views.importar_estudiantes, name='importar_estudiantes'),
     path('estudiantes/<int:estudiante_id>/eliminar/', views.eliminar_estudiante, name='eliminar_estudiante'),
     path('estudiantes/<int:estudiante_id>/editar/',   views.editar_estudiante,   name='editar_estudiante'),
+    path('aceptar-terminos/', views.aceptar_terminos, name='aceptar_terminos'),
+    path('mora/', views.mora_view, name='mora'),
 ]
