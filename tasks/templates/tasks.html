@@ -5,79 +5,91 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- HEADER -->
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
     <h2 class="mb-0">Registros</h2>
 
-    <a href="/tasks/create" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Nuevo Registro
-    </a>
+```
+<a href="/tasks/create" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Nuevo Registro
+</a>
+```
+
 </div>
 
 <!-- FILTROS -->
+
 <div class="card mb-4 shadow-sm">
     <div class="card-body">
 
-        <form method="GET" class="row g-3">
+```
+    <form method="GET" class="row g-3">
 
-            <!-- EVENTO -->
-            <div class="col-md-3">
-                <select name="evento" class="form-select">
-                    <option value="">Todos los eventos</option>
-                    {% for evento in eventos %}
-                    <option value="{{ evento.id }}"
-                        {% if request.GET.evento == evento.id|stringformat:"s" %}selected{% endif %}>
-                        {{ evento.titulo }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
+        <!-- EVENTO -->
+        <div class="col-12 col-md-3">
+            <select name="evento" class="form-select">
+                <option value="">Todos los eventos</option>
+                {% for evento in eventos %}
+                <option value="{{ evento.id }}"
+                    {% if request.GET.evento == evento.id|stringformat:"s" %}selected{% endif %}>
+                    {{ evento.titulo }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
 
-            <!-- GRADO + SECCIÓN -->
-            <div class="col-md-2">
-                <select name="grado_seccion" class="form-select">
-                    <option value="">Todos</option>
+        <!-- GRADO + SECCIÓN -->
+        <div class="col-12 col-md-2">
+            <select name="grado_seccion" class="form-select">
+                <option value="">Todos</option>
 
-                    {% for opcion in opciones_grado_seccion %}
-                    <option value="{{ opcion }}"
-                        {% if request.GET.grado_seccion == opcion %}selected{% endif %}>
-                        {{ opcion }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
+                {% for opcion in opciones_grado_seccion %}
+                <option value="{{ opcion }}"
+                    {% if request.GET.grado_seccion == opcion %}selected{% endif %}>
+                    {{ opcion }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
 
-            <!-- ESTUDIANTE -->
-            <div class="col-md-3">
-                <input type="text" name="estudiante" class="form-control"
-                    placeholder="Buscar estudiante"
-                    value="{{ request.GET.estudiante }}">
-            </div>
+        <!-- ESTUDIANTE -->
+        <div class="col-12 col-md-3">
+            <input type="text" name="estudiante" class="form-control"
+                placeholder="Buscar estudiante"
+                value="{{ request.GET.estudiante }}">
+        </div>
 
-            <!-- RECAUDADOR -->
-            <div class="col-md-2">
-                <input type="text" name="recaudador" class="form-control"
-                    placeholder="Recaudador"
-                    value="{{ request.GET.recaudador }}">
-            </div>
+        <!-- RECAUDADOR -->
+        <div class="col-12 col-md-2">
+            <input type="text" name="recaudador" class="form-control"
+                placeholder="Recaudador"
+                value="{{ request.GET.recaudador }}">
+        </div>
 
-            <!-- BOTONES -->
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        <!-- BOTONES -->
+        <div class="col-12 col-md-2 d-flex flex-column flex-md-row gap-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
 
-                <a href="{% url 'tasks' %}" class="btn btn-outline-secondary w-100">
-                    Limpiar
-                </a>
-            </div>
+            <a href="{% url 'tasks' %}" class="btn btn-outline-secondary w-100">
+                Limpiar
+            </a>
+        </div>
 
-        </form>
+    </form>
 
-    </div>
+</div>
+```
+
 </div>
 
 <!-- TABLA -->
+
 <div class="card shadow-sm">
     <div class="card-body">
 
+```
+    <div class="table-responsive">
         <table class="table table-hover align-middle modern-table">
             <thead class="table-light">
                 <tr>
@@ -99,7 +111,6 @@
                         {{ t.estudiante.nombre }}
                     </td>
 
-                    <!-- GRADO + SECCIÓN -->
                     <td>
                         {{ t.grado }}{{ t.seccion }}
                     </td>
@@ -114,40 +125,45 @@
                 </tr>
                 {% endfor %}
             </tbody>
-
         </table>
-
-        {% if transacciones|length == 0 %}
-        <p class="text-center text-muted mt-3">No hay registros</p>
-        {% endif %}
-
     </div>
+
+    {% if transacciones|length == 0 %}
+    <p class="text-center text-muted mt-3">No hay registros</p>
+    {% endif %}
+
+</div>
+```
+
 </div>
 
 <!-- RESUMEN -->
+
 <div class="row mt-4">
 
-    <div class="col-md-6">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <h6 class="text-muted">Total Recaudado</h6>
-                <h3 class="text-success">
-                    $ {{ total_recaudado|intcomma }}
-                </h3>
-            </div>
+```
+<div class="col-12 col-md-6">
+    <div class="card text-center shadow-sm">
+        <div class="card-body">
+            <h6 class="text-muted">Total Recaudado</h6>
+            <h3 class="text-success">
+                $ {{ total_recaudado|intcomma }}
+            </h3>
         </div>
     </div>
+</div>
 
-    <div class="col-md-6">
-        <div class="card text-center shadow-sm">
-            <div class="card-body">
-                <h6 class="text-muted">Total Transacciones</h6>
-                <h3>
-                    {{ transacciones|length }}
-                </h3>
-            </div>
+<div class="col-12 col-md-6">
+    <div class="card text-center shadow-sm">
+        <div class="card-body">
+            <h6 class="text-muted">Total Transacciones</h6>
+            <h3>
+                {{ transacciones|length }}
+            </h3>
         </div>
     </div>
+</div>
+```
 
 </div>
 

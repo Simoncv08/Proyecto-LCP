@@ -231,3 +231,17 @@ h1, h2, h3, h4, h5 {
 .doc-content p {
     margin-bottom: 10px;
 }
+
+@media (max-width: 768px) {
+    table {
+        font-size: 0.8rem;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+}
