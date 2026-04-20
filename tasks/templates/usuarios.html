@@ -1,33 +1,70 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h4>Usuarios Activos</h4>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Usuario</th>
-            <th>Email</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for u in usuarios %}
-        <tr>
-            <td>{{ u.username }}</td>
-            <td>{{ u.email }}</td>
-            <td>
-                <a href="{% url 'editar_usuario' u.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <form method="POST" action="{% url 'eliminar_usuario' u.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger"
-                        onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">
-                        Eliminar
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
+    <h4 class="mb-0">Usuarios Activos</h4>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+```
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>
+                        <i class="fas fa-user text-secondary me-2"></i>
+                        {{ u.username }}
+                    </td>
+
+                    <td class="text-muted">
+                        {{ u.email|default:"Sin email" }}
+                    </td>
+
+                    <td class="text-end">
+
+                        <a href="{% url 'editar_usuario' u.id %}" 
+                           class="btn btn-sm btn-outline-primary me-1">
+                            <i class="fas fa-pen"></i>
+                        </a>
+
+                        <form method="POST" action="{% url 'eliminar_usuario' u.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-3">
+                        No hay usuarios registrados
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+```
+
+</div>
+
 {% endblock %}

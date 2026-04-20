@@ -1,19 +1,59 @@
-<h4>Editar Usuario</h4>
+{% extends 'base.html' %}
 
-<form method="post">
-    {% csrf_token %}
-    
-    {{ form.username.label }}<br>
-    {{ form.username }}<br><br>
+{% block content %}
 
-    <hr>
-    <h6>Cambiar contraseña</h6>
+<div class="row justify-content-center">
+    <div class="col-md-6">
 
-    {{ form.nueva_password.label }}<br>
-    {{ form.nueva_password }}<br>
+```
+    <div class="card shadow-sm">
+        <div class="card-body">
 
-    {{ form.confirmar_password.label }}<br>
-    {{ form.confirmar_password }}<br><br>
+            <h5 class="mb-3">Editar Usuario</h5>
 
-    <button class="btn btn-success">Guardar</button>
-</form>
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- USUARIO -->
+                <div class="mb-3">
+                    <label class="form-label">Usuario</label>
+                    {{ form.username }}
+                </div>
+
+                <hr>
+
+                <h6 class="text-muted mb-3">Cambiar contraseña</h6>
+
+                <!-- PASSWORD -->
+                <div class="mb-3">
+                    <label class="form-label">Nueva contraseña</label>
+                    {{ form.nueva_password }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Confirmar contraseña</label>
+                    {{ form.confirmar_password }}
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'usuarios' %}" class="btn btn-outline-secondary">
+                        Volver
+                    </a>
+
+                    <button class="btn btn-success">
+                        Guardar
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}
